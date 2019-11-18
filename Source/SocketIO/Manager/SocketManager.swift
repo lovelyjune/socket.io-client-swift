@@ -533,7 +533,7 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
             _config.insert(.secure(true))
         }
 
-        _config.insert(.path("/socket.io/"), replacing: false)
+        _config.insert(.path("/websocket/"), replacing: false)
 
         // If `ConfigSettable` & `SocketEngineSpec`, update its configs.
         if var settableEngine = engine as? ConfigSettable & SocketEngineSpec {
