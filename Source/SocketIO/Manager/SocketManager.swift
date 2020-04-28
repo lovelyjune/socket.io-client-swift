@@ -84,6 +84,8 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
 
     /// If `true` then every time `connect` is called, a new engine will be created.
     public var forceNew = false
+    
+    public var path :String
 
     /// The queue that all interaction with the client should occur on. This is the queue that event handlers are
     /// called on.
@@ -139,9 +141,10 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
     ///
     /// - parameter socketURL: The url of the socket.io server.
     /// - parameter config: The config for this socket.
-    public init(socketURL: URL, config: SocketIOClientConfiguration = []) {
+    public init(socketURL: URL, config: SocketIOClientConfiguration = [],path:String) {
         self._config = config
         self.socketURL = socketURL
+        self.path = path
 
         super.init()
 
@@ -154,8 +157,8 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
     /// - parameter socketURL: The url of the socket.io server.
     /// - parameter config: The config for this socket.
     @objc
-    public convenience init(socketURL: URL, config: [String: Any]?) {
-        self.init(socketURL: socketURL, config: config?.toSocketConfiguration() ?? [])
+    public convenience init(socketURL: URL, config: [String: Any]?,path:String) {
+        self.init(socketURL: socketURL, config: config?.toSocketConfiguration() ?? [],path:path)
     }
 
     /// :nodoc:
@@ -533,7 +536,7 @@ open class SocketManager : NSObject, SocketManagerSpec, SocketParsable, SocketDa
             _config.insert(.secure(true))
         }
 
-        _config.insert(.path("/websocket/"), replacing: false)
+        _config.insert(.path("\(path)/"), replacing: false)
 
         // If `ConfigSettable` & `SocketEngineSpec`, update its configs.
         if var settableEngine = engine as? ConfigSettable & SocketEngineSpec {
